@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="template.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:define name="estilos">
+        <link href="http://pvmwgtdireo02.df.intrabb.bb.com.br/cdn/css/bootstrap.min.css" rel="stylesheet" />
+    </ui:define>
+    <ui:define name="js-proprios">
+        <script>
+            $(".tabelabg").bootgrid();
+        </script>
+<!--        <script>
+            $("#grid-data").bootgrid({
+                formatters: {
+                    "pix": function (column, row) {
+                        return "<img src=resources/images/"#{arquivo.idExtensao.idTipoArquivo.icone}">" + column.id + ": " + row.id + "</a>";
+                    }
+                }
+            });
+        </script>-->
+    </ui:define>
+
+    <ui:define name="conteudo">
+        <div class="cointainer">
+            <div style="margin: 20px auto;width: 1000px;" >
+                <h1><h:outputText value="#{gerenciadorBean.conteudoSelecionado.descricao}"/></h1>
+                <h3>Repositório de Arquivos</h3>
+                <hr/>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="dropdown pull-right" >Selecione um tipo de conteúdo
+                            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                Conteúdo
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                <ui:repeat value="#{gerenciadorBean.listaTipoConteudo}" var="tipoConteudo">
+                                    <li><a href="index.bb?conteudo=#{tipoConteudo.id}"><h:outputText value="#{tipoConteudo.descricao}"/></a></li>
+                                </ui:repeat>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <hr/>
+                <h:form id="frm">
+                    <table class="table table-condensed table-hover table-striped tabelabg" id="grid-data" data-toggle="bootgrid">
+                        <thead>
+                            <tr>
+                                <th data-column-id="desc">Descrição</th>
+                                <th data-column-id="publicacao" data-order="desc">Publicação</th>
+                                <th data-column-id="tpArquivo" class="tdCentro" data-formatter="pix">Tipo Arquivo</th>
+                                <th data-column-id="download" data-formatter="commands" class="tdCentro">Download</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ui:repeat value="#{gerenciadorBean.listaArquivo}" var="arquivo">
+                                <tr>
+                                    <td><h:outputText value="#{arquivo.descricao}"/></td>
+                                    <td><h:outputText value="#{arquivo.dataEnvio}"><f:convertDateTime pattern="dd/MM/yyyy" /></h:outputText></td>
+                                    <td class="tdCentro"><img src="resources/images/#{arquivo.idExtensao.idTipoArquivo.icone}"/></td>
+                                    <td class="tdCentro"><h:commandLink actionListener="#{gerenciadorBean.downloadFile(arquivo)}" rendered="#{usuarioBean.temAcesso}" class="btn btn-default" title="Clique para fazer o download do arquivo."><span class="glyphicon glyphicon-download"></span></h:commandLink><h:commandLink disabled="true" rendered="#{!usuarioBean.temAcesso}" class="btn btn-default alertIcon" title="Acesso permitido apenas para funcionários de nível gerencial e para assessores em unidades estratégicas."><span class="glyphicon glyphicon-remove-sign"></span></h:commandLink></td>
+                                </tr>
+                            </ui:repeat>
+                        </tbody>
+                    </table>
+                </h:form>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

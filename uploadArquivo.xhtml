@@ -1,0 +1,124 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="template.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:define name="estilos">
+        <link href="http://pvmwgtdireo02.df.intrabb.bb.com.br/cdn/chosen/chosen.min.css" rel="stylesheet" />
+        <link href="resources/css/bootstrap-chosen.css" rel="stylesheet" />
+    </ui:define>
+    <ui:define name="js-proprios">
+        <script src="http://pvmwgtdireo02.df.intrabb.bb.com.br/cdn/chosen/chosen.jquery.min.js" crossorigin="anonymous"></script>
+        <script>
+            $(".pseudoClasse").chosen({
+                search_contains: true
+            });
+        </script>
+    </ui:define>
+    <ui:define name="conteudo">
+        <div class="cointainer">
+            <div style="margin: 20px auto;width: 1000px;" >
+                <h2>Upload de Arquivos</h2><hr/>
+                
+                <ui:fragment rendered="#{gerenciadorBean.exibeAlert}">
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Fechar"><span aria-hidden="true">x</span></button>
+                        <strong>Arquivo inserido com sucesso!</strong>
+                    </div>
+                </ui:fragment>
+                <ui:fragment rendered="#{gerenciadorBean.exibeAlertTamanhoArquivo}">
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Fechar"><span aria-hidden="true">x</span></button>
+                        <strong>Arquivo não pode ter mais que 15Mb.</strong>
+                    </div>
+                </ui:fragment>
+                <ui:fragment rendered="#{gerenciadorBean.exibeAlertExtensaoInvalida}">
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Fechar"><span aria-hidden="true">x</span></button>
+                        <strong>Arquivo contém um tipo de extensão inválida. Entre em contato com os desenvolvedores.</strong>
+                    </div>
+                </ui:fragment>
+                <ui:fragment rendered="#{gerenciadorBean.exibeAlertMinimoRO}">
+                    <div class="alert alert-warning alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Fechar"><span aria-hidden="true">x</span></button>
+                        <strong>O arquivo tem que estar vinculado a no mínimo um Público.</strong>
+                    </div>
+                </ui:fragment>
+                <ui:fragment rendered="#{gerenciadorBean.exibeAlertTitulo}">
+                    <div class="alert alert-warning alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Fechar"><span aria-hidden="true">x</span></button>
+                        <strong>O o título do arquivo deve conter no mínimo 10 caracteres.</strong>
+                    </div>
+                </ui:fragment>
+                 <ui:fragment rendered="#{gerenciadorBean.exibeAlertDescricao}">
+                    <div class="alert alert-warning alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Fechar"><span aria-hidden="true">x</span></button>
+                        <strong>A descrição do arquivo deve conter no mínimo 20 caracteres.</strong>
+                    </div>
+                </ui:fragment>
+                 <ui:fragment rendered="#{gerenciadorBean.exibeAlertTipoConteudo}">
+                    <div class="alert alert-warning alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Fechar"><span aria-hidden="true">x</span></button>
+                        <strong>Selecione um tipo de conteúdo.</strong>
+                    </div>
+                </ui:fragment>
+
+                <h:form class="form-horizontal" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <h:outputLabel for="tipo_conteudo" class="col-md-2 control-label" value="Tipo de Conteúdo"/>
+                        <div class="col-md-4">
+                            <h:selectOneMenu class="form-control" id="tipo_conteudo" value="#{gerenciadorBean.tipoConteudo}" converter="#{listConverter}" >
+                                <f:selectItem itemValue="#{null}" itemLabel="Selecione..." />
+                                <f:selectItems value="#{gerenciadorBean.listaTipoConteudo}" var="tipoC" itemValue="#{tipoC}" itemLabel="#{tipoC.descricao}"/>
+                            </h:selectOneMenu>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <h:outputLabel for="publicoRo" class="col-md-2 control-label" value="Público"/>
+                        <div class="col-md-4">
+                            <h:selectManyMenu class="form-control pseudoClasse" id="publicoRo" value="#{gerenciadorBean.listaRoArquivo}" converter="#{listConverter}"  >
+                                <f:selectItems value="#{gerenciadorBean.listaRO}" var="ro" itemValue="#{ro}" itemLabel="#{ro.descricao}"/>
+                            </h:selectManyMenu>
+                        </div>
+                        <h:outputLabel for="publicoComissao" class="col-md-2 control-label" value="Comissão"/>
+                        <div class="col-md-4">
+                            <h:selectManyMenu class="form-control pseudoClasse" id="publicoComissao" value="#{gerenciadorBean.listaComissaoArquivo}" converter="#{listConverter}">
+                                <f:selectItems value="#{gerenciadorBean.listaComissao}" var="comissao" itemValue="#{comissao}" itemLabel="#{comissao.nomeComissao}"/>
+                            </h:selectManyMenu>
+                        </div>                                
+                    </div>
+
+                    <div class="form-group">
+                        <h:outputLabel for="titulo" class="col-md-2 control-label" value="Título"/>
+                        <div class="col-md-10">
+                            <h:inputText id="titulo" class="form-control" value="#{gerenciadorBean.titulo}"></h:inputText>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <h:outputLabel for="descricao" class="col-md-2 control-label" value="Descrição"/>
+                        <div class="col-md-10">
+                            <h:inputTextarea  id="descricao" class="form-control" value="#{gerenciadorBean.descricao}"></h:inputTextarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <h:outputLabel for="arquivo" class="col-md-2 control-label" value="Arquivo"/>
+                        <div class="col-md-4">
+                            <h:inputFile id="arquivo" value="#{gerenciadorBean.arquivo}"/>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h:commandButton value="Upload" action="#{gerenciadorBean.upload}" class="btn btn-success pull-right btn-lg"/>
+                    </div>
+
+                </h:form>
+
+            </div>
+        </div>
+
+    </ui:define>
+</ui:composition>
